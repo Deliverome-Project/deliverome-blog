@@ -79,11 +79,13 @@ posts/<post>/        one folder per Substack post
   data/              small inputs; manifest.tsv lists large files on Zenodo
   protocol/          bench protocols, for wet-lab posts
 shared/              tooling: brand figure style, blog-figure and blog-data commands
-scripts/             new_post.py, build_index.py, release_post.py
+scripts/             new_post.py, build_index.py, promote_post.py, release_post.py
+docs/                WRITING_A_POST.md: guide for Deliverome scientists
 assets/fonts/        Manrope, the brand font (SIL Open Font License)
 ```
 
-Contributors: start with [CLAUDE.md](CLAUDE.md).
+Contributors: start with [CLAUDE.md](CLAUDE.md). Deliverome scientists writing a post:
+see [docs/WRITING_A_POST.md](docs/WRITING_A_POST.md).
 
 ## Contact
 
