@@ -1,0 +1,27 @@
+# Same policy as other Deliverome repos: monthly grouped updates, 7-day cooldown (majors 30).
+# Only shared tooling and Actions are updated. Post folders are deliberately excluded:
+# a post's environment and figure-script pins are frozen at its release.
+version: 2
+updates:
+  - package-ecosystem: uv
+    directory: /shared
+    schedule:
+      interval: monthly
+    cooldown:
+      default-days: 7
+      semver-major-days: 30
+    groups:
+      shared-minor-and-patch:
+        update-types: [minor, patch]
+    open-pull-requests-limit: 3
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    cooldown:
+      default-days: 7
+    groups:
+      actions:
+        patterns: ["*"]
+    open-pull-requests-limit: 3

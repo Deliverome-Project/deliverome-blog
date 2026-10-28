@@ -57,7 +57,7 @@ def script_url(post: str, tag: str, name: str) -> str:
 
 
 SCRIPT_TEMPLATE = '''# /// script
-# requires-python = ">=3.12"
+# requires-python = ">=3.14"
 # dependencies = [
 {deps}
 # ]
