@@ -68,7 +68,7 @@ with volumes, timings, and the reason for any non-standard step) and
 
 ## Figures
 
-Figures follow accessible-surfaceome's final-figure convention. **Each figure is
+Figures follow [accessible-surfaceome](https://github.com/Deliverome-Project/accessible-surfaceome)'s final-figure convention. **Each figure is
 one standalone reproduction unit** in `posts/<slug>/figures/`:
 
 | File | Rule |
@@ -200,8 +200,7 @@ may merge to `main` with `status = "draft"`.
 
 ## Analysis standards
 
-Posts are public scientific claims, so hold them to the same bar as
-deliverome-internal:
+Posts are public scientific claims, so hold them to the same bar as a paper:
 
 - Join on stable identifiers (Ensembl, UniProt, HGNC IDs); use gene symbols only
   as a documented fallback.

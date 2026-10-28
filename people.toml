@@ -9,5 +9,5 @@ orcid = "0000-0002-5423-9717"
 
 ["Maria ter Weele"]
 zenodo_name = "ter Weele, Maria"
-affiliation = ""  # TODO: confirm with Maria
-orcid = ""        # TODO: confirm with Maria
+affiliation = "Deliverome Bio, Inc."
+orcid = ""        # add if Maria has one
