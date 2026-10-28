@@ -1,0 +1,57 @@
+# Keeps the private drafts repo (Deliverome-Project/deliverome-blog-drafts) up to date with
+# this public repo, the way a fork would be. It lives here so both repos carry the identical
+# file, and it runs only in the drafts repo. Nightly, or on demand from the Actions tab:
+# merges public main into drafts main. The README post index is the one file both sides
+# regenerate, so a conflict there is resolved by rebuilding it. Any other conflict opens an
+# issue for a person instead of guessing.
+name: sync-from-public
+
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  sync:
+    if: github.repository == 'Deliverome-Project/deliverome-blog-drafts'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v6
+      - name: Merge public main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote add upstream https://github.com/Deliverome-Project/deliverome-blog.git
+          git fetch upstream main
+          if git merge-base --is-ancestor upstream/main HEAD; then
+            echo "Already up to date with public main."; exit 0
+          fi
+          if ! git merge --no-edit upstream/main -m "Sync from public main"; then
+            conflicts=$(git diff --name-only --diff-filter=U)
+            if [ "$conflicts" = "README.md" ]; then
+              git checkout --theirs README.md
+              uv run scripts/build_index.py
+              git add README.md
+              git commit --no-edit
+            else
+              git merge --abort
+              gh issue create --title "Sync from public main needs a hand" --body "Merging public \`main\` into drafts conflicts in:
+
+          \`\`\`
+          $conflicts
+          \`\`\`
+
+          Resolve locally: \`git fetch upstream && git merge upstream/main\`, fix, push."
+              exit 1
+            fi
+          fi
+          git push origin HEAD:main

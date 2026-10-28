@@ -47,7 +47,34 @@ posts/
     protocol/        wet-lab posts only: protocol.md + reagents.tsv
 ```
 
+## Drafts repo (private) vs this repo (public)
+
+Posts are **written in the private `Deliverome-Project/deliverome-blog-drafts` repo**
+and reach this public repo only when they go live. GitHub can't make a fork of a public
+repo private, so the drafts repo is a private copy that tracks this one as its `upstream`
+remote, the way a fork would. It holds the same files, plus the posts still in progress.
+
+- **Which repo am I in?** Run `git remote get-url origin`. In the drafts repo, commit
+  freely, including half-finished work; nothing there is public. In the public repo,
+  change only shared tooling, docs, and published posts.
+- **Keeping drafts current:** `.github/workflows/sync-from-public.yml` (inert in the
+  public repo) merges public `main` into drafts `main` nightly, or on demand from the
+  Actions tab. A conflict anywhere but the README index opens an issue in drafts.
+- **Going public:** from the drafts checkout, run `uv run scripts/promote_post.py <slug>`
+  (a dry run that shows what would go public). Then add `--execute`, which pushes
+  `post/<slug>` to the public repo as **one commit** holding only `posts/<slug>/` (plus
+  `people.toml` for new authors), and opens a PR there. Draft history never goes public.
+  Ask the user before `--execute`. Merge the public PR when the Substack post goes live,
+  then follow [Releasing a post](#releasing-a-post-code-doi).
+- **Corrections:** fix it in drafts and promote again; the public PR shows the diff.
+- **Tooling changes** (`shared/`, `scripts/`, template, CI) go to the public repo by PR,
+  and reach drafts at the next sync. Don't edit them in drafts.
+- Scientists' plain-language guide: [`docs/WRITING_A_POST.md`](docs/WRITING_A_POST.md).
+
 ## Adding a post
+
+Do this in the drafts repo.
+
 
 1. `uv run scripts/new_post.py <slug> --title "..." --author "Full Name"`.
    Slugs are kebab-case, have no date, and **never change** once published
@@ -194,9 +221,6 @@ When the post is ready to go live:
 figures, add a dated `## Changelog` entry to the post README, and release
 again (`prepare` → merge → `tag`). Earlier releases stay citable.
 
-Once the repo is public, unpublished drafts stay on branches until their post
-goes live, because anything on `main` is visible. While it is private, drafts
-may merge to `main` with `status = "draft"`.
 
 ## Analysis standards
 
