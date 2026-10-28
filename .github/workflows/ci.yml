@@ -14,16 +14,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.13"
-      - run: python scripts/build_index.py --check
+      - uses: astral-sh/setup-uv@v6
+      - run: uv run scripts/build_index.py --check
 
-  shared:
-    name: Shared utils tests
+  figures:
+    name: Figure scripts and shared tooling
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
-      - run: uv run --locked pytest -q
+      - name: Shared tooling tests
+        run: uv run --locked pytest -q
         working-directory: shared
+      - name: Figure rules (standalone, style in sync, PNG made by current script)
+        run: uv run --locked --project shared blog-figure check

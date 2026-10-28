@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: >-
+  Please cite the specific post you used. Each post is archived on Zenodo as its
+  own GitHub release (<post>-v<version>) with a DOI listed in README.md.
+title: "deliverome-blog: code and data behind Deliverome blog posts"
+type: software
+authors:
+  - name: "The Deliverome Project"
+    website: "https://deliverome.org"
+repository-code: "https://github.com/Deliverome-Project/deliverome-blog"
+url: "https://deliverome.substack.com"
+license: MIT

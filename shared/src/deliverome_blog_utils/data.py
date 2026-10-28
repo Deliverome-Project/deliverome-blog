@@ -14,6 +14,9 @@ downloaded/reused).
 
 ``blog-data hash FILE...`` prints manifest rows for files you are about to
 upload, so the checksums are computed from the local originals.
+
+``blog-data zenodo push posts/<slug>`` uploads ``data/external/`` to a Zenodo
+draft and writes the manifest for you; see :mod:`deliverome_blog_utils.zenodo`.
 """
 
 from __future__ import annotations
@@ -56,6 +59,23 @@ def read_manifest(post_dir: Path) -> list[dict]:
         if Path(row["path"]).is_absolute() or ".." in Path(row["path"]).parts:
             raise ValueError(f"{manifest}:{i}: path must be relative and stay inside data/external/")
     return rows
+
+
+def read_manifest_descriptions(post_dir: Path) -> dict[str, str]:
+    """Map manifest path -> description, so regenerating the manifest keeps them."""
+    manifest = post_dir / "data" / "manifest.tsv"
+    if not manifest.exists():
+        return {}
+    with manifest.open(newline="") as handle:
+        return {row["path"]: row.get("description", "") for row in csv.DictReader(handle, delimiter="\t")}
+
+
+def write_manifest(post_dir: Path, rows: list[dict]) -> None:
+    """Write ``data/manifest.tsv`` sorted by path."""
+    with (post_dir / "data" / "manifest.tsv").open("w", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=MANIFEST_COLUMNS, delimiter="\t", lineterminator="\n")
+        writer.writeheader()
+        writer.writerows(sorted(rows, key=lambda r: r["path"]))
 
 
 def _valid(path: Path, row: dict) -> bool:
@@ -111,7 +131,17 @@ def main(argv: list[str] | None = None) -> int:
     fetch_p.add_argument("post_dir", type=Path)
     hash_p = sub.add_parser("hash", help="print manifest rows (path, sha256, size) for local files")
     hash_p.add_argument("files", nargs="+", type=Path)
+    zen_p = sub.add_parser("zenodo", help="create/update the post's Zenodo data draft (never publishes)")
+    zen_p.add_argument("action", choices=["push"])
+    zen_p.add_argument("post_dir", type=Path)
+    zen_p.add_argument("--sandbox", action="store_true", help="use sandbox.zenodo.org (ZENODO_SANDBOX_TOKEN)")
+    zen_p.add_argument("--dry-run", action="store_true", help="show metadata and files; no network calls")
     args = parser.parse_args(argv)
+
+    if args.command == "zenodo":
+        from deliverome_blog_utils import zenodo
+
+        return zenodo.run(args)
 
     if args.command == "fetch":
         failures = fetch(args.post_dir.resolve())

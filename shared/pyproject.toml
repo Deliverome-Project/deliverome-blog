@@ -1,18 +1,20 @@
 [project]
 name = "deliverome-blog-utils"
 version = "0.1.0"
-description = "Shared plotting, figure-provenance and data-fetching helpers for Deliverome blog posts"
+description = "Brand figure style, figure-script tooling, and data/Zenodo helpers for Deliverome blog posts"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.12"
 dependencies = [
     "matplotlib>=3.9",
     "pandas>=2.2",
+    "pillow>=10",
     "seaborn>=0.13.2",
 ]
 
 [project.scripts]
 blog-data = "deliverome_blog_utils.data:main"
+blog-figure = "deliverome_blog_utils.figures:main"
 
 [dependency-groups]
 dev = ["pytest>=8"]
