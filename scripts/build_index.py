@@ -1,10 +1,10 @@
 # /// script
-# requires-python = ">=3.11"
+# requires-python = ">=3.14"
 # dependencies = []
 # ///
 """Build the post index in README.md and check every post folder's structure.
 
-Stdlib only (Python 3.11+): ``uv run scripts/build_index.py`` rewrites the
+Stdlib only: ``uv run scripts/build_index.py`` rewrites the
 index between the POSTS markers; ``--check`` (used in CI) fails instead of
 writing if the index is stale or any post breaks the rules in CLAUDE.md.
 """
