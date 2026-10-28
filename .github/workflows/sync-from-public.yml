@@ -3,7 +3,9 @@
 # file, and it runs only in the drafts repo. Nightly, or on demand from the Actions tab:
 # merges public main into drafts main. The README post index is the one file both sides
 # regenerate, so a conflict there is resolved by rebuilding it. Any other conflict opens an
-# issue for a person instead of guessing.
+# issue for a person instead of guessing. GitHub never lets the Actions token push changes
+# to workflow files, so when public main changes .github/workflows/ this also opens an issue.
+# Then run `git pull upstream main && git push` from a local drafts checkout.
 name: sync-from-public
 
 on:
@@ -54,4 +56,21 @@ jobs:
               exit 1
             fi
           fi
+          if ! git diff --quiet origin/main HEAD -- .github/workflows; then
+            title="Sync from public main changes workflow files"
+            if [ -z "$(gh issue list --state open --search "in:title \"$title\"" --json number -q '.[0].number')" ]; then
+              gh issue create --title "$title" --body "Public \`main\` changed \`.github/workflows/\`, which the Actions token may not push. From a local drafts checkout run:
+
+          \`\`\`bash
+          git pull upstream main && git push
+          \`\`\`
+
+          (or ask Claude to sync drafts). This issue closes itself after the next successful sync."
+            fi
+            echo "::warning::Workflow files changed upstream; opened an issue for a manual sync."
+            exit 0
+          fi
           git push origin HEAD:main
+          for n in $(gh issue list --state open --search 'in:title "Sync from public main"' --json number -q '.[].number'); do
+            gh issue close "$n" --comment "Synced automatically."
+          done
