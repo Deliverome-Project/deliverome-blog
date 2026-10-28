@@ -14,4 +14,5 @@ permissions:
 
 jobs:
   python-release:
+    if: github.repository == 'Deliverome-Project/deliverome-blog'  # not in the private drafts copy
     uses: Deliverome-Project/.github/.github/workflows/python-release-check.yml@69e2920b028988cf821403c9cda01fb60444d4b7

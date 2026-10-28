@@ -72,6 +72,9 @@ remote, the way a fork would. It holds the same files, plus the posts still in p
 - **Corrections:** fix it in drafts and promote again; the public PR shows the diff.
 - **Tooling changes** (`shared/`, `scripts/`, template, CI) go to the public repo by PR,
   and reach drafts at the next sync. Don't edit them in drafts.
+- **Dependabot also opens PRs in drafts**, because both repos carry the same
+  `dependabot.yml` and it can't be turned off per repo. Close them unmerged: the same
+  update lands in the public repo and reaches drafts through the sync.
 - Scientists' plain-language guide: [`docs/WRITING_A_POST.md`](docs/WRITING_A_POST.md).
 
 ## Adding a post
