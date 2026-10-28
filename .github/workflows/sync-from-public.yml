@@ -2,10 +2,12 @@
 # this public repo, the way a fork would be. It lives here so both repos carry the identical
 # file, and it runs only in the drafts repo. Nightly, or on demand from the Actions tab:
 # merges public main into drafts main. The README post index is the one file both sides
-# regenerate, so a conflict there is resolved by rebuilding it. Any other conflict opens an
-# issue for a person instead of guessing. GitHub never lets the Actions token push changes
-# to workflow files, so when public main changes .github/workflows/ this also opens an issue.
-# Then run `git pull upstream main && git push` from a local drafts checkout.
+# regenerate, so a conflict there is resolved by rebuilding it.
+#
+# Two cases need a person, and the run fails with the fix in its error annotation (GitHub
+# emails failed scheduled runs): any other merge conflict, and a public change to
+# .github/workflows/, which GitHub never lets the Actions token push. Either way, from a
+# local drafts checkout: `git pull upstream main && git push` (resolve conflicts first).
 name: sync-from-public
 
 on:
@@ -15,7 +17,6 @@ on:
 
 permissions:
   contents: write
-  issues: write
 
 jobs:
   sync:
@@ -27,9 +28,8 @@ jobs:
           fetch-depth: 0
       - uses: astral-sh/setup-uv@v6
       - name: Merge public main
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
+          fix="From a local drafts checkout run: git pull upstream main && git push"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git remote add upstream https://github.com/Deliverome-Project/deliverome-blog.git
@@ -38,39 +38,20 @@ jobs:
             echo "Already up to date with public main."; exit 0
           fi
           if ! git merge --no-edit upstream/main -m "Sync from public main"; then
-            conflicts=$(git diff --name-only --diff-filter=U)
-            if [ "$conflicts" = "README.md" ]; then
+            conflicts=$(git diff --name-only --diff-filter=U | tr '\n' ' ')
+            if [ "$conflicts" = "README.md " ]; then
               git checkout --theirs README.md
               uv run scripts/build_index.py
               git add README.md
               git commit --no-edit
             else
               git merge --abort
-              gh issue create --title "Sync from public main needs a hand" --body "Merging public \`main\` into drafts conflicts in:
-
-          \`\`\`
-          $conflicts
-          \`\`\`
-
-          Resolve locally: \`git fetch upstream && git merge upstream/main\`, fix, push."
+              echo "::error::Merge conflicts in: $conflicts. $fix, resolving the conflicts before pushing."
               exit 1
             fi
           fi
           if ! git diff --quiet origin/main HEAD -- .github/workflows; then
-            title="Sync from public main changes workflow files"
-            if [ -z "$(gh issue list --state open --search "in:title \"$title\"" --json number -q '.[0].number')" ]; then
-              gh issue create --title "$title" --body "Public \`main\` changed \`.github/workflows/\`, which the Actions token may not push. From a local drafts checkout run:
-
-          \`\`\`bash
-          git pull upstream main && git push
-          \`\`\`
-
-          (or ask Claude to sync drafts). This issue closes itself after the next successful sync."
-            fi
-            echo "::warning::Workflow files changed upstream; opened an issue for a manual sync."
-            exit 0
+            echo "::error::Public main changed .github/workflows/, which the Actions token may not push. $fix"
+            exit 1
           fi
           git push origin HEAD:main
-          for n in $(gh issue list --state open --search 'in:title "Sync from public main"' --json number -q '.[].number'); do
-            gh issue close "$n" --comment "Synced automatically."
-          done

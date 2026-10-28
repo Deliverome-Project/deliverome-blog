@@ -59,10 +59,10 @@ remote, the way a fork would. It holds the same files, plus the posts still in p
   change only shared tooling, docs, and published posts.
 - **Keeping drafts current:** `.github/workflows/sync-from-public.yml` (inert in the
   public repo) merges public `main` into drafts `main` nightly, or on demand from the
-  Actions tab. A conflict anywhere but the README index opens an issue in drafts. So does
-  a public change to `.github/workflows/`, because GitHub won't let the Actions token push
-  workflow files. For those, sync from a local drafts checkout with
-  `git pull upstream main && git push` (your own credentials can push them).
+  Actions tab. Two cases fail the run with the fix in its error message, and GitHub
+  emails failed scheduled runs: a conflict anywhere but the README index, and a public
+  change to `.github/workflows/`, which GitHub won't let the Actions token push. For both,
+  sync from a local drafts checkout with `git pull upstream main && git push`.
 - **Going public:** from the drafts checkout, run `uv run scripts/promote_post.py <slug>`
   (a dry run that shows what would go public). Then add `--execute`, which pushes
   `post/<slug>` to the public repo as **one commit** holding only `posts/<slug>/` (plus
