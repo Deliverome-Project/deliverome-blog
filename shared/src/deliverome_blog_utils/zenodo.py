@@ -277,7 +277,7 @@ def run(args) -> int:
         var = "ZENODO_SANDBOX_TOKEN" if args.sandbox else "ZENODO_TOKEN"
         token = os.environ.get(var)
         if not token:
-            print(f"{var} is not set (personal token with deposit:write + deposit:actions)", file=sys.stderr)
+            print(f"{var} is not set: add it to the repo's .env (see .env.example)", file=sys.stderr)
             return 2
         client = Client(token, sandbox=args.sandbox)
     try:

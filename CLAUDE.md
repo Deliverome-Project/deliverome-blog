@@ -136,7 +136,9 @@ processing code can be exercised.
 ### Zenodo data record workflow
 
 Auth: a Zenodo personal access token with `deposit:write` and `deposit:actions`
-in `ZENODO_TOKEN`. Never commit it. To rehearse, use `ZENODO_SANDBOX_TOKEN`
+in `ZENODO_TOKEN`. Copy `.env.example` to `.env` at the repo root (gitignored)
+and fill it in; `blog-data` loads the nearest `.env`. Never commit it, and
+never print or echo its value. To rehearse, use `ZENODO_SANDBOX_TOKEN`
 with `--sandbox` (sandbox.zenodo.org, separate account).
 
 1. Put the large files in `posts/<slug>/data/external/` (gitignored). Tar any

@@ -24,6 +24,7 @@ from __future__ import annotations
 import argparse
 import csv
 import hashlib
+import os
 import shutil
 import sys
 import urllib.request
@@ -123,6 +124,19 @@ def fetch(post_dir: Path) -> int:
     return failures
 
 
+def load_dotenv(start: Path) -> Path | None:
+    """Load the nearest ``.env`` above ``start`` into ``os.environ`` (existing vars win)."""
+    for parent in [start, *start.parents]:
+        env_file = parent / ".env"
+        if env_file.is_file():
+            for line in env_file.read_text().splitlines():
+                key, sep, value = line.strip().partition("=")
+                if sep and key and not key.startswith("#"):
+                    os.environ.setdefault(key.strip(), value.strip().strip("\"'"))
+            return env_file
+    return None
+
+
 def main(argv: list[str] | None = None) -> int:
     """CLI entry point: ``blog-data fetch POST_DIR`` or ``blog-data hash FILE...``."""
     parser = argparse.ArgumentParser(prog="blog-data", description=__doc__.splitlines()[0])
@@ -140,6 +154,8 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "zenodo":
         from deliverome_blog_utils import zenodo
+
+        load_dotenv(Path.cwd())
 
         return zenodo.run(args)
 

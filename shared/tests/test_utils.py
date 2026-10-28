@@ -178,3 +178,18 @@ def test_zenodo_push_requires_known_authors(repo):
     (post / "data" / "external" / "x.bin").write_bytes(b"x")
     with pytest.raises(zenodo.ZenodoError, match="people.toml"):
         zenodo.push(post, FakeZenodo())
+
+
+def test_load_dotenv_finds_nearest_and_keeps_existing(tmp_path, monkeypatch):
+    from deliverome_blog_utils.data import load_dotenv
+
+    (tmp_path / ".env").write_text('# comment\nZENODO_TOKEN="abc"\nZENODO_COMMUNITY=\n')
+    nested = tmp_path / "posts" / "demo"
+    nested.mkdir(parents=True)
+    monkeypatch.delenv("ZENODO_TOKEN", raising=False)
+    monkeypatch.setenv("ZENODO_COMMUNITY", "kept")
+    assert load_dotenv(nested) == tmp_path / ".env"
+    import os
+
+    assert os.environ["ZENODO_TOKEN"] == "abc"
+    assert os.environ["ZENODO_COMMUNITY"] == "kept"
