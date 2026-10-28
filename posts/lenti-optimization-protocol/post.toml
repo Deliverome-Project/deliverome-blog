@@ -2,8 +2,9 @@
 title = "Optimizing lentivirus production"
 authors = ["Maria ter Weele"]
 status = "draft"          # draft | published
+version = 1               # release tag is <slug>-v<version>; bump only for a post-publication correction
 published = ""            # YYYY-MM-DD, set when the Substack post goes live
 substack_url = ""         # https://deliverome.substack.com/p/...
-data_doi = ""             # Zenodo DOI for large data, e.g. 10.5281/zenodo.1234567 ("" if none)
-published_commit = ""     # git SHA of main at publication; the frozen, citable state
+data_doi = ""             # Zenodo data record DOI (CC0); written by `blog-data zenodo push` ("" if no large data)
+code_doi = ""             # Zenodo DOI of this post's GitHub release; filled after `scripts/release_post.py tag`
 summary = "Maria's optimized lentivirus production protocol, with the optimization data behind each choice."

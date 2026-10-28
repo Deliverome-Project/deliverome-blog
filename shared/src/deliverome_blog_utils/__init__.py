@@ -1,32 +1,30 @@
 """Shared helpers for Deliverome blog posts.
 
-- :mod:`.plotting`   -- brand style, palettes, figure creation
-- :mod:`.provenance` -- ``save_figure``: figure + source data + provenance stamp
-- :mod:`.data`       -- fetch and verify large external datasets from a manifest
+- :mod:`.brand_style` -- canonical figure style, inlined into every standalone figure script
+- :mod:`.figures`     -- ``blog-figure`` CLI: scaffold, sync, check, and extract figure scripts
+- :mod:`.data`        -- ``blog-data`` CLI: fetch/verify large data; push it to a Zenodo draft
 """
 
-from deliverome_blog_utils.plotting import (
+from deliverome_blog_utils.brand_style import (
     CATEGORICAL_PALETTE,
     COLORS,
     SEQUENTIAL_PALETTES,
+    apply_brand_style,
     create_figure,
-    get_categorical_colors,
-    get_color,
-    get_diverging_palette,
-    get_sequential_palette,
-    setup_plotting_style,
+    diverging_palette,
+    load_source_data,
+    save_figure,
+    sequential_palette,
 )
-from deliverome_blog_utils.provenance import save_figure
 
 __all__ = [
     "CATEGORICAL_PALETTE",
     "COLORS",
     "SEQUENTIAL_PALETTES",
+    "apply_brand_style",
     "create_figure",
-    "get_categorical_colors",
-    "get_color",
-    "get_diverging_palette",
-    "get_sequential_palette",
+    "diverging_palette",
+    "load_source_data",
     "save_figure",
-    "setup_plotting_style",
+    "sequential_palette",
 ]

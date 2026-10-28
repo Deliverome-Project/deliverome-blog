@@ -106,6 +106,7 @@ source = { editable = "../../shared" }
 dependencies = [
     { name = "matplotlib" },
     { name = "pandas" },
+    { name = "pillow" },
     { name = "seaborn" },
 ]
 
@@ -113,6 +114,7 @@ dependencies = [
 requires-dist = [
     { name = "matplotlib", specifier = ">=3.9" },
     { name = "pandas", specifier = ">=2.2" },
+    { name = "pillow", specifier = ">=10" },
     { name = "seaborn", specifier = ">=0.13.2" },
 ]
 

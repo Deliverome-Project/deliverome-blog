@@ -24,8 +24,8 @@ POSTS = ROOT / "posts"
 README = ROOT / "README.md"
 START, END = "<!-- POSTS:START -->", "<!-- POSTS:END -->"
 SLUG_RE = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
-REQUIRED_FILES = ["README.md", "post.toml", "pyproject.toml", "data/README.md", "data/manifest.tsv"]
-REQUIRED_KEYS = ["title", "authors", "status", "published", "substack_url", "data_doi", "published_commit", "summary"]
+REQUIRED_FILES = ["README.md", "post.toml", "pyproject.toml", "data/README.md", "data/manifest.tsv", "figures/README.md"]
+REQUIRED_KEYS = ["title", "authors", "status", "version", "published", "substack_url", "data_doi", "code_doi", "summary"]
 MANIFEST_HEADER = ["path", "url", "sha256", "size_bytes", "description"]
 MAX_TRACKED_BYTES = 25 * 1024 * 1024
 
@@ -46,10 +46,12 @@ def load_posts() -> tuple[list[dict], list[str]]:
         if absent:
             errors.append(f"{slug}: post.toml missing {', '.join(absent)}")
             continue
+        if not isinstance(meta["version"], int) or meta["version"] < 1:
+            errors.append(f"{slug}: version must be a positive integer")
         if meta["status"] not in {"draft", "published"}:
             errors.append(f"{slug}: status must be draft or published")
         if meta["status"] == "published":
-            for key in ("published", "substack_url", "published_commit"):
+            for key in ("published", "substack_url"):
                 if not meta[key]:
                     errors.append(f"{slug}: published posts need {key}")
             for f in ("README.md", "post.toml"):
@@ -78,19 +80,23 @@ def oversized_tracked_files() -> list[str]:
     ]
 
 
+def _doi(doi: str) -> str:
+    return f"[{doi}](https://doi.org/{doi})" if doi else "pending"
+
+
 def render_index(posts: list[dict]) -> str:
     """Markdown for the index: published posts newest first, then drafts."""
     published = sorted((p for p in posts if p["status"] == "published"), key=lambda p: p["published"], reverse=True)
     drafts = sorted((p for p in posts if p["status"] == "draft"), key=lambda p: p["title"].lower())
-    lines = ["| Date | Post | Authors | Code & data | Large data |", "|---|---|---|---|---|"]
+    lines = ["| Date | Post | Authors | Code & figures | Code DOI | Data (CC0) |", "|---|---|---|---|---|---|"]
     for p in published:
-        doi = f"[{p['data_doi']}](https://doi.org/{p['data_doi']})" if p["data_doi"] else "—"
+        data = _doi(p["data_doi"]) if p["data_doi"] else "in folder"
         lines.append(
             f"| {p['published']} | [{p['title']}]({p['substack_url']}) | {', '.join(p['authors'])} "
-            f"| [`posts/{p['slug']}`](posts/{p['slug']}) | {doi} |"
+            f"| [`posts/{p['slug']}`](posts/{p['slug']}) | {_doi(p['code_doi'])} | {data} |"
         )
     if not published:
-        lines.append("| | _No posts published yet_ | | | |")
+        lines.append("| | _First post coming soon_ | | | | |")
     if drafts:
         lines += ["", "**In progress**", ""]
         lines += [f"- [{p['title']}](posts/{p['slug']}) — {', '.join(p['authors'])}" for p in drafts]

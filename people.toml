@@ -1,0 +1,13 @@
+# Authors as they appear in post.toml `authors`, mapped to Zenodo creator
+# metadata for the code release (.zenodo.json) and data record. Zenodo names
+# are "Family, Given". Leave affiliation/orcid empty rather than guessing.
+
+["Becca Carlson"]
+zenodo_name = "Carlson, Rebecca J."
+affiliation = "Deliverome Bio, Inc."
+orcid = "0000-0002-5423-9717"
+
+["Maria ter Weele"]
+zenodo_name = "ter Weele, Maria"
+affiliation = "Deliverome Bio, Inc."
+orcid = ""        # add if Maria has one
