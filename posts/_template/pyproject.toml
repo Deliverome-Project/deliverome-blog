@@ -1,7 +1,7 @@
 [project]
 name = "post-template"
 version = "0.1.0"
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 dependencies = [
     "deliverome-blog-utils",
     "pandas>=2.2",
@@ -9,6 +9,12 @@ dependencies = [
 
 [tool.uv]
 package = false
+# uv carries its own root certificates; releases before 0.13.4 trust the eMudhra
+# intermediates compromised on 2026-10-19. uv refuses to run here on an older version.
+required-version = ">=0.13.4"
+# Supply-chain quarantine at the resolver: uv never picks a release under 7 days old,
+# direct or transitive (Deliverome-Project/.github standards).
+exclude-newer = "7 days"
 
 [tool.uv.sources]
 deliverome-blog-utils = { path = "../../shared", editable = true }

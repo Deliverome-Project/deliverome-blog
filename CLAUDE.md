@@ -256,6 +256,27 @@ Run through this before flipping visibility:
 5. Enable the Zenodo GitHub integration (above), then release any posts
    already published.
 
+## Org standards (Deliverome-Project/.github)
+
+This repo follows the org-wide standard in
+[`Deliverome-Project/.github`](https://github.com/Deliverome-Project/.github)
+(`standards.toml`), like every other Deliverome Python repo:
+
+- **Python 3.14** everywhere: `.python-version`, `requires-python`, and the PEP 723
+  headers of scripts and figure scripts. The org bumps it via `standards.py fanout`; don't
+  change it here by hand.
+- **uv >= 0.13.4** (`[tool.uv] required-version`) and a **7-day supply-chain quarantine**
+  (`exclude-newer = "7 days"`): uv never locks a release under a week old.
+- **`dependency-guard`** runs on every PR. It fails silent downgrades, versions under 7
+  days old, versions below a security floor, and Python/uv drift. Put deliberate
+  exceptions in the PR description, one per line (`allow-downgrade: pandas`,
+  `allow-fresh: <pkg>`).
+- **Dependabot** updates `shared/` and Actions monthly with a 7-day cooldown. Post folders
+  are excluded on purpose, because a post's environment is frozen at its release.
+- **`python-release-check`** opens an issue monthly when a newer Python is worth adopting.
+- **`.claude/hooks/ensure-uv.sh`** installs a new-enough uv in Claude Code cloud sessions;
+  it is managed by the org fan-out, so don't edit it.
+
 ## Checks
 
 ```bash

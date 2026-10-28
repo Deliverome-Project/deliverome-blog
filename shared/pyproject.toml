@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Brand figure style, figure-script tooling, and data/Zenodo helpers for Deliverome blog posts"
 readme = "README.md"
 license = "MIT"
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 dependencies = [
     "matplotlib>=3.9",
     "pandas>=2.2",
@@ -25,3 +25,11 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/deliverome_blog_utils"]
+
+[tool.uv]
+# uv carries its own root certificates; releases before 0.13.4 trust the eMudhra
+# intermediates compromised on 2026-10-19. uv refuses to run here on an older version.
+required-version = ">=0.13.4"
+# Supply-chain quarantine at the resolver: uv never picks a release under 7 days old,
+# direct or transitive (Deliverome-Project/.github standards).
+exclude-newer = "7 days"
