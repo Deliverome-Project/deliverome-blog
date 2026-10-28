@@ -1,0 +1,9 @@
+# Post metadata. scripts/build_index.py reads this to build the root README index.
+title = "TODO: post title"
+authors = ["TODO: Full Name"]
+status = "draft"          # draft | published
+published = ""            # YYYY-MM-DD, set when the Substack post goes live
+substack_url = ""         # https://deliverome.substack.com/p/...
+data_doi = ""             # Zenodo DOI for large data, e.g. 10.5281/zenodo.1234567 ("" if none)
+published_commit = ""     # git SHA of main at publication; the frozen, citable state
+summary = "TODO: one sentence for the index."

@@ -1,0 +1,9 @@
+# Post metadata. scripts/build_index.py reads this to build the root README index.
+title = "Optimizing lentivirus production"
+authors = ["Maria ter Weele"]
+status = "draft"          # draft | published
+published = ""            # YYYY-MM-DD, set when the Substack post goes live
+substack_url = ""         # https://deliverome.substack.com/p/...
+data_doi = ""             # Zenodo DOI for large data, e.g. 10.5281/zenodo.1234567 ("" if none)
+published_commit = ""     # git SHA of main at publication; the frozen, citable state
+summary = "Maria's optimized lentivirus production protocol, with the optimization data behind each choice."

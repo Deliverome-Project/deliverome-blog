@@ -1,0 +1,18 @@
+# Large data fetched from data/manifest.tsv (hosted on Zenodo etc., never committed)
+posts/*/data/external/
+
+# Python / uv
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+
+# Secrets
+.env
+.env.*
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

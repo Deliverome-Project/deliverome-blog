@@ -1,0 +1,14 @@
+[project]
+name = "post-lenti-optimization-protocol"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "deliverome-blog-utils",
+    "pandas>=2.2",
+]
+
+[tool.uv]
+package = false
+
+[tool.uv.sources]
+deliverome-blog-utils = { path = "../../shared", editable = true }
