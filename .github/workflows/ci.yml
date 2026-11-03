@@ -13,16 +13,16 @@ jobs:
     name: Post structure and index
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v6
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
       - run: uv run scripts/build_index.py --check
 
   figures:
     name: Figure scripts and shared tooling
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v6
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
       - name: Shared tooling tests
         run: uv run --locked pytest -q
         working-directory: shared
