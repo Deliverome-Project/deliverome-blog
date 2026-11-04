@@ -147,7 +147,7 @@ fast. `build_index.py --check` fails CI on any tracked file over 25 MB.
 | Raw data with a standard archive | The domain repository: SRA/ENA (sequencing), GEO (processed expression), PRIDE (proteomics), BioImage Archive (imaging). Link it from the post README. |
 | > 50 GB, or needs streaming/range reads (e.g. Zarr) | Public Cloudflare R2 bucket, listed in `data/manifest.tsv` the same way. Ask before creating one. |
 
-**Licensing:** data we produce is **CC0 1.0** (Astera open-science guidelines),
+**Licensing:** data we produce is **CC0 1.0** (Radial open-science guidelines),
 both in this repo and on Zenodo. Third-party data keeps its license: record it
 in `data/README.md`, and if redistribution isn't allowed, don't commit or
 upload it; list its original URL in `manifest.tsv` instead.
