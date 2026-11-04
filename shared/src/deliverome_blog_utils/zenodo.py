@@ -38,6 +38,9 @@ from pathlib import Path
 from deliverome_blog_utils.data import read_manifest_descriptions, write_manifest
 
 REPO_URL = "https://github.com/Deliverome-Project/deliverome-blog"
+# Funding line on every Zenodo record. Always cite Radial by its ROR id
+# (https://ror.org/050rbg919); keep in step with scripts/release_post.py.
+FUNDING_HTML = '<p>Supported by Radial (ROR <a href="https://ror.org/050rbg919">050rbg919</a>).</p>'
 HOSTS = {False: "https://zenodo.org", True: "https://sandbox.zenodo.org"}
 MAX_FILES = 100  # Zenodo per-record limit; tar directories with many files
 SKIP = {"FETCH_LOG.tsv"}
@@ -115,6 +118,7 @@ def build_metadata(post_dir: Path, repo_root: Path) -> dict:
         f'Code to reproduce every figure: <a href="{folder_url}">{folder_url}</a> (MIT). '
         "File checksums are listed in that folder's <code>data/manifest.tsv</code>; "
         "<code>uv run blog-data fetch .</code> downloads and verifies them.</p>"
+        + FUNDING_HTML
     )
     metadata = {
         "upload_type": "dataset",
